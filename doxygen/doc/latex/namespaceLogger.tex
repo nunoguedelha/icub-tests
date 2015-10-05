@@ -1,0 +1,118 @@
+\section{Logger Namespace Reference}
+\label{namespaceLogger}\index{Logger@{Logger}}
+
+
+Contains public helper functions to be used within Unit\+Test.  
+
+
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{namespaceLogger_abcc95577fff0fdf4e7a15dace50eabcf}{report} (const char $\ast$msg,...)
+\begin{DoxyCompactList}\small\item\em Report general information. \end{DoxyCompactList}\item 
+void \hyperlink{namespaceLogger_a3bf1a7735c87be5f6edd8ba4eecca5a3}{check\+True} (bool flag, const char $\ast$msg,...)
+\begin{DoxyCompactList}\small\item\em Check result of a test. \end{DoxyCompactList}\item 
+int \hyperlink{namespaceLogger_a804f6a578b2a47144a76206cbce2decf}{failures} ()
+\begin{DoxyCompactList}\small\item\em Return total number of failures so far. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Contains public helper functions to be used within Unit\+Test. 
+
+
+
+\subsection{Function Documentation}
+\index{Logger@{Logger}!check\+True@{check\+True}}
+\index{check\+True@{check\+True}!Logger@{Logger}}
+\subsubsection[{check\+True(bool flag, const char $\ast$msg,...)}]{\setlength{\rightskip}{0pt plus 5cm}void Logger\+::check\+True (
+\begin{DoxyParamCaption}
+\item[{bool}]{flag, }
+\item[{const char $\ast$}]{msg, }
+\item[{}]{...}
+\end{DoxyParamCaption}
+)}\label{namespaceLogger_a3bf1a7735c87be5f6edd8ba4eecca5a3}
+
+
+Check result of a test. 
+
+If flag is true the test is considered passed. Otherwise the test is considerd failed. Add a message in printf style. 
+
+Definition at line 22 of file Logger.\+cpp.
+
+
+\begin{DoxyCode}
+23 \{
+24     va\_list args;
+25     va\_start(args, msg);
+26     \textcolor{keywordflow}{if} (msg) \{
+27         \textcolor{keywordtype}{char} buf[255];
+28         \textcolor{keywordtype}{int} w = vsnprintf(buf, 255, msg, args);
+29 
+30         \textcolor{comment}{//chomp ending \(\backslash\)n because we will be forcing one ourself}
+31         \textcolor{keywordflow}{if} (w>0 && buf[w-1]==\textcolor{charliteral}{'\(\backslash\)n'}) \{
+32             buf[w-1]=0;
+33         \}
+34 
+35         \textcolor{keywordflow}{if} (!flag)
+36         \{
+37             \_log.addFailure();
+38             \_log.log(\textcolor{stringliteral}{"!!FAILED "} + std::string(buf)+\textcolor{stringliteral}{"\(\backslash\)n"});
+39         \}
+40         \textcolor{keywordflow}{else}
+41         \{
+42             \_log.log(\textcolor{stringliteral}{"Ok "} + std::string(buf)+\textcolor{stringliteral}{"\(\backslash\)n"});
+43         \}
+44     \}
+45     va\_end(args);
+46 \}
+\end{DoxyCode}
+\index{Logger@{Logger}!failures@{failures}}
+\index{failures@{failures}!Logger@{Logger}}
+\subsubsection[{failures()}]{\setlength{\rightskip}{0pt plus 5cm}int Logger\+::failures (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{namespaceLogger_a804f6a578b2a47144a76206cbce2decf}
+
+
+Return total number of failures so far. 
+
+
+
+Definition at line 48 of file Logger.\+cpp.
+
+
+\begin{DoxyCode}
+49 \{
+50     \textcolor{keywordflow}{return} \_log.getFailures();
+51 \}
+\end{DoxyCode}
+\index{Logger@{Logger}!report@{report}}
+\index{report@{report}!Logger@{Logger}}
+\subsubsection[{report(const char $\ast$msg,...)}]{\setlength{\rightskip}{0pt plus 5cm}void Logger\+::report (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{msg, }
+\item[{}]{...}
+\end{DoxyParamCaption}
+)}\label{namespaceLogger_abcc95577fff0fdf4e7a15dace50eabcf}
+
+
+Report general information. 
+
+No checks are performed. Message is printf style. 
+
+Definition at line 10 of file Logger.\+cpp.
+
+
+\begin{DoxyCode}
+11 \{
+12     va\_list args;
+13     va\_start(args, msg);
+14     \textcolor{keywordflow}{if} (msg) \{
+15         \textcolor{keywordtype}{char} buf[255];
+16         \textcolor{keywordtype}{int} w = vsnprintf(buf, 255, msg, args);
+17         \_log.log(\textcolor{stringliteral}{"++"}+std::string(buf));
+18     \}
+19     va\_end(args);
+20 \}
+\end{DoxyCode}

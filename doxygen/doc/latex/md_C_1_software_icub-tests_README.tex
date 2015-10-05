@@ -1,0 +1,31 @@
+The {\ttfamily icub-\/tests} repository contains tests for the i\+Cub robot.
+
+See documentation at \href{https://robotology.github.io/icub-tests/}{\tt https\+://robotology.\+github.\+io/icub-\/tests/}
+
+To update documentation follow these steps\+:
+
+
+\begin{DoxyCode}
+1 git checkout gh-pages
+2 git rebase master
+3 cd doxygen
+4 rm -rf doc
+5 doxygen ./generate.txt
+6 git add ./doc
+7 git log -1
+8 git commit --amend
+9 git push --force-with-lease
+10 git checkout master
+\end{DoxyCode}
+
+
+\subsection*{Contributors}
+
+
+\begin{DoxyItemize}
+\item Ali Paikan
+\item Lorenzo Natale
+\item Silvio Traversaro
+\item Alessandro Scalzo
+\item Marco Randazzo 
+\end{DoxyItemize}
