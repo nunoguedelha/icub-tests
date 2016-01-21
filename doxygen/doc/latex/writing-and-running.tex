@@ -1,55 +1,88 @@
 \hypertarget{writing-and-running_writing-new-tests}{}\section{Writing a new test}\label{writing-and-running_writing-new-tests}
 Create a folder with the name of your test case in the {\ttfamily icub-\/tests/src/} folder to keep your test codes\-:
 
-``` \$ mkdir icub-\/tests/src/example-\/test ```
+
+\begin{DoxyCode}
+$ mkdir icub-tests/src/example-test
+\end{DoxyCode}
+
 
 Create a child test class inherited from the {\ttfamily Yarp\-Test\-Case}\-:
 
-```c++ \#ifndef {\itshape E\-X\-A\-M\-P\-L\-E\-\_\-\-T\-E\-S\-T\-\_\-\-H} \#define {\itshape E\-X\-A\-M\-P\-L\-E\-\_\-\-T\-E\-S\-T\-\_\-\-H}
 
-\#include $<$Yarp\-Test\-Case.\-h$>$
+\begin{DoxyCode}
+\textcolor{preprocessor}{#ifndef \_EXAMPLE\_TEST\_H\_}
+\textcolor{preprocessor}{}\textcolor{preprocessor}{#define \_EXAMPLE\_TEST\_H\_}
+\textcolor{preprocessor}{}
+\textcolor{preprocessor}{#include <YarpTestCase.h>}
 
-class \hyperlink{classExampleTest}{Example\-Test} \-: public Yarp\-Test\-Case \{ public\-: \hyperlink{classExampleTest}{Example\-Test()}; virtual $\sim$\-Example\-Test();
+\textcolor{keyword}{class }ExampleTest : \textcolor{keyword}{public} YarpTestCase \{
+\textcolor{keyword}{public}:
+    ExampleTest();
+    \textcolor{keyword}{virtual} ~ExampleTest();
 
-virtual bool setup(yarp\-::os\-::\-Property\& property);
+    \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} setup(yarp::os::Property& property);
 
-virtual void tear\-Down();
+    \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} tearDown();
 
-virtual void run(); \};
+    \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} run();
+\};
 
-\#endif //\-\_\-\-E\-X\-A\-M\-P\-L\-E\-\_\-\-T\-E\-S\-T\-\_\-\-H ```
+\textcolor{preprocessor}{#endif //\_EXAMPLE\_TEST\_H}
+\end{DoxyCode}
+
 
 Implement the test case\-:
 
-```c++ \#include $<$Plugin.\-h$>$ \#include \char`\"{}\-Example\-Test.\-h\char`\"{}
 
-using namespace std; using namespace R\-T\-F; using namespace yarp\-::os;
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include <Plugin.h>}
+\textcolor{preprocessor}{#include "ExampleTest.h"}
 
-prepare the plugin P\-R\-E\-P\-A\-R\-E\-\_\-\-P\-L\-U\-G\-I\-N(\-Example\-Test)
+\textcolor{keyword}{using namespace }std;
+\textcolor{keyword}{using namespace }RTF;
+\textcolor{keyword}{using namespace }yarp::os;
 
-Example\-Test\-::\-Example\-Test() \-: Yarp\-Test\-Case(\char`\"{}\-Example\-Test\char`\"{}) \{ \}
+\textcolor{comment}{// prepare the plugin}
+PREPARE\_PLUGIN(ExampleTest)
 
-Example\-Test\-::$\sim$\-Example\-Test() \{ \}
+ExampleTest::ExampleTest() : YarpTestCase("ExampleTest") \{
+\}
 
-bool Example\-Test\-::setup(yarp\-::os\-::\-Property \&property) \{
+ExampleTest::~ExampleTest() \{ \}
 
-initialization goes here ... updating the test name if(property.\-check(\char`\"{}name\char`\"{})) set\-Name(property.\-find(\char`\"{}name\char`\"{}).as\-String());
+\textcolor{keywordtype}{bool} ExampleTest::setup(yarp::os::Property &property) \{
 
-string example = property.\-check(\char`\"{}example\char`\"{}, Value(\char`\"{}default value\char`\"{})).as\-String();
+    \textcolor{comment}{// initialization goes here ...}
+    \textcolor{comment}{//updating the test name}
+    \textcolor{keywordflow}{if}(property.check(\textcolor{stringliteral}{"name"}))
+        setName(property.find(\textcolor{stringliteral}{"name"}).asString());
 
-R\-T\-F\-\_\-\-T\-E\-S\-T\-\_\-\-R\-E\-P\-O\-R\-T(Asserter\-::format(\char`\"{}\-Use '\%s' for the example param!\char`\"{}, example.\-c\-\_\-str())); return true; \}
+    \textcolor{keywordtype}{string} example = \textcolor{keyword}{property}.check(\textcolor{stringliteral}{"example"}, Value(\textcolor{stringliteral}{"default value"})).asString();
 
-void Example\-Test\-::tear\-Down() \{ finalization goes here ... \}
+    RTF\_TEST\_REPORT(Asserter::format(\textcolor{stringliteral}{"Use '%s' for the example param!"},
+                                       example.c\_str()));
+    \textcolor{keywordflow}{return} \textcolor{keyword}{true};
+\}
 
-void Example\-Test\-::run() \{ \begin{DoxyVerb}int a = 5; int b = 3;
-RTF_TEST_REPORT("testing a < b");
-RTF_TEST_CHECK(a<b, Asserter::format("%d is not smaller than %d.", a, b));
-RTF_TEST_REPORT("testing a > b");
-RTF_TEST_CHECK(a>b, Asserter::format("%d is not smaller than %d.", a, b));
-RTF_TEST_REPORT("testing a == b");
-RTF_TEST_CHECK(a==b, Asserter::format("%d is not smaller than %d.", a, b));
-\end{DoxyVerb}
- add more ... \} ```
+\textcolor{keywordtype}{void} ExampleTest::tearDown() \{
+    \textcolor{comment}{// finalization goes here ...}
+\}
+
+\textcolor{keywordtype}{void} ExampleTest::run() \{
+
+    \textcolor{keywordtype}{int} a = 5; \textcolor{keywordtype}{int} b = 3;
+    RTF\_TEST\_REPORT(\textcolor{stringliteral}{"testing a < b"});
+    RTF\_TEST\_CHECK(a<b, Asserter::format(\textcolor{stringliteral}{"%d is not smaller than %d."}, a, b));
+    RTF\_TEST\_REPORT(\textcolor{stringliteral}{"testing a > b"});
+    RTF\_TEST\_CHECK(a>b, Asserter::format(\textcolor{stringliteral}{"%d is not smaller than %d."}, a, b));
+    RTF\_TEST\_REPORT(\textcolor{stringliteral}{"testing a == b"});
+    RTF\_TEST\_CHECK(a==b, Asserter::format(\textcolor{stringliteral}{"%d is not smaller than %d."}, a, b));
+    \textcolor{comment}{// add more }
+    \textcolor{comment}{// ...}
+\}
+\end{DoxyCode}
+
 
 Notice\-: The {\ttfamily R\-T\-F\-\_\-\-T\-E\-S\-T\-\_\-\-C\-H\-E\-C\-K}, {\ttfamily R\-T\-F\-\_\-\-T\-E\-S\-T\-\_\-\-R\-E\-P\-O\-R\-T} do N\-O\-T threw any exception and are used to add failure or report messages to the result collector. Instead, all the macros which include {\ttfamily \-\_\-\-A\-S\-S\-E\-R\-T\-\_\-} within their names (e.\-g., {\ttfamily R\-T\-F\-\_\-\-A\-S\-S\-E\-R\-T\-\_\-\-F\-A\-I\-L}) throw exceptions which prevent only the current test case (Not the whole test suite) of being proceed. The error/failure messages thrown by the exceptions are caught. (See \href{http://robotology.github.io/robot-testing/documentation/TestAssert_8h.html}{\tt $\ast$\-Basic Assertion macros$\ast$}).
 
@@ -57,72 +90,102 @@ The report/assertion macros store the source line number where the check/report 
 
 Create a cmake file to build the plug-\/in\-:
 
-```cmake cmake\-\_\-minimum\-\_\-required(V\-E\-R\-S\-I\-O\-N 2.\-8.\-9)
 
-\section*{set the project name}
+\begin{DoxyCode}
+cmake\_minimum\_required(VERSION 2.8.9)
 
-set(\-P\-R\-O\-J\-E\-C\-T\-N\-A\-M\-E Example\-Test) project(\$\{P\-R\-O\-J\-E\-C\-T\-N\-A\-M\-E\})
+\textcolor{preprocessor}{# set the project name}
+\textcolor{preprocessor}{}set(PROJECTNAME ExampleTest)
+project($\{PROJECTNAME\})
 
-\section*{add the required cmake packages}
+# add the required cmake packages
+find\_package(RTF)
+find\_package(RTF COMPONENTS DLL)
+find\_package(YARP)
 
-find\-\_\-package(\-R\-T\-F) find\-\_\-package(\-R\-T\-F C\-O\-M\-P\-O\-N\-E\-N\-T\-S D\-L\-L) find\-\_\-package(\-Y\-A\-R\-P)
+\textcolor{preprocessor}{# add include directories}
+\textcolor{preprocessor}{}include\_directories($\{CMAKE\_SOURCE\_DIR\}
+                    $\{RTF\_INCLUDE\_DIRS\}
+                    $\{YARP\_INCLUDE\_DIRS\}
+                    $\{YARP\_HELPERS\_INCLUDE\_DIR\})
 
-\section*{add include directories}
+# add required libraries 
+link\_libraries($\{RTF\_LIBRARIES\}
+               $\{YARP\_LIBRARIES\})
 
-include\-\_\-directories(\$\{C\-M\-A\-K\-E\-\_\-\-S\-O\-U\-R\-C\-E\-\_\-\-D\-I\-R\} \$\{R\-T\-F\-\_\-\-I\-N\-C\-L\-U\-D\-E\-\_\-\-D\-I\-R\-S\} \$\{Y\-A\-R\-P\-\_\-\-I\-N\-C\-L\-U\-D\-E\-\_\-\-D\-I\-R\-S\} \$\{Y\-A\-R\-P\-\_\-\-H\-E\-L\-P\-E\-R\-S\-\_\-\-I\-N\-C\-L\-U\-D\-E\-\_\-\-D\-I\-R\})
+# add the source codes to build the plugin library
+add\_library($\{PROJECTNAME\} MODULE ExampleTest.h
+                                  ExampleTest.cpp)
 
-\section*{add required libraries}
+# set the installation options
+install(TARGETS $\{PROJECTNAME\}
+        EXPORT $\{PROJECTNAME\}
+        COMPONENT runtime
+        LIBRARY DESTINATION lib)
+\end{DoxyCode}
 
-link\-\_\-libraries(\$\{R\-T\-F\-\_\-\-L\-I\-B\-R\-A\-R\-I\-E\-S\} \$\{Y\-A\-R\-P\-\_\-\-L\-I\-B\-R\-A\-R\-I\-E\-S\})
-
-\section*{add the source codes to build the plugin library}
-
-add\-\_\-library(\$\{P\-R\-O\-J\-E\-C\-T\-N\-A\-M\-E\} M\-O\-D\-U\-L\-E \hyperlink{ExampleTest_8h_source}{Example\-Test.\-h} \hyperlink{ExampleTest_8cpp_source}{Example\-Test.\-cpp})
-
-\section*{set the installation options}
-
-install(T\-A\-R\-G\-E\-T\-S \$\{P\-R\-O\-J\-E\-C\-T\-N\-A\-M\-E\} E\-X\-P\-O\-R\-T \$\{P\-R\-O\-J\-E\-C\-T\-N\-A\-M\-E\} C\-O\-M\-P\-O\-N\-E\-N\-T runtime L\-I\-B\-R\-A\-R\-Y D\-E\-S\-T\-I\-N\-A\-T\-I\-O\-N lib) ```
 
 Call your cmake file from the {\ttfamily icub-\/test/\-C\-Make\-Lists.\-txt} to build it along with the other other test plugins. To do that, adds the following line to the {\ttfamily icub-\/test/\-C\-Make\-Lists.\-txt}
 
-``` \section*{Build example test}
 
-add\-\_\-subdirectory(src/example-\/test) ```
+\begin{DoxyCode}
+\textcolor{preprocessor}{# Build example test }
+\textcolor{preprocessor}{add\_subdirectory(src/example-test)}
+\end{DoxyCode}
+
 
 Please check the {\ttfamily icub-\/tests/example} folder for a template for developing tests for the i\-Cub.\hypertarget{writing-and-running_running_single_test_case}{}\section{Running a single test case}\label{writing-and-running_running_single_test_case}
 As it is documented here (\href{http://robotology.github.io/robot-testing/documentation/testrunner.html}{\tt $\ast$\-Running test case plug-\/ins using testrunner$\ast$}) you can run a single test case or run it with the other tests using a test suite. For example, to run a single test case\-:
 
-``` testrunner --verbose --test plugins/\-Example\-Test.\-so --param \char`\"{}-\/-\/name My\-Example\-Test\char`\"{} ```
+
+\begin{DoxyCode}
+testrunner --verbose --test plugins/ExampleTest.so  --param \textcolor{stringliteral}{"--name MyExampleTest"}
+\end{DoxyCode}
+
 
 Notice that this test require the {\ttfamily yarpserver} to be running and it contains tests that are programmed to succeed and some that are programmed to fail.
 
 or to run the i\-Cub\-Sim camera test whith the test configuration file\-:
 
-``` testrunner --verbose --test plugins/\-Camera\-Test.\-so --param \char`\"{}-\/-\/from camera\-\_\-right.\-ini\char`\"{} --environment \char`\"{}-\/-\/robotname icub\-Sim\char`\"{} ```
+
+\begin{DoxyCode}
+testrunner --verbose --test plugins/CameraTest.so --param \textcolor{stringliteral}{"--from camera\_right.ini"} --environment \textcolor{stringliteral}{"
+      --robotname icubSim"}
+\end{DoxyCode}
+
 
 This runs the icub\-Sim right-\/camera test with the parameters specified in the {\ttfamily right\-\_\-camera.\-ini} which can be found in {\ttfamily icub-\/tests/suits/contexts/icub\-Sim} folder. This test assumes you are running {\ttfamily yarpserver} and the i\-Cub simulator (i.\-e. {\ttfamily i\-Cub\-\_\-\-S\-I\-M}).
 
 Notice that the environment parameter {\ttfamily -\/-\/robotname icub\-Sim} is used to locate the correct context (for this examples is {\ttfamily icub\-Sim}) and also to update the variables loaded from the {\ttfamily right\-\_\-camera.\-ini} file.\hypertarget{writing-and-running_running_multiple_tests}{}\section{Running multiple tests using a test suite}\label{writing-and-running_running_multiple_tests}
 You can update one of the existing suite X\-M\-L files to add your test case plug-\/in and its parameters or create a new test suite which keeps all the relevant test cases. For example the {\ttfamily basic-\/icub\-Sim.\-xml} test suite keeps the basic tests for cameras and motors\-:
 
-```xml $<$?xml version=\char`\"{}1.\-0\char`\"{} encoding=\char`\"{}\-U\-T\-F-\/8\char`\"{}?$>$
 
-$<$suit name=\char`\"{}\-Basic Tests Suite\char`\"{}$>$ Testing robot's basic features $<$environment$>$--robotname icub\-Sim$<$/environment$>$ $<$fixture param=\char`\"{}-\/-\/fixture icubsim-\/fixture.\-xml\char`\"{}$>$ yarpmanager $<$/fixture$>$
+\begin{DoxyCode}
+<?xml version=\textcolor{stringliteral}{"1.0"} encoding=\textcolor{stringliteral}{"UTF-8"}?>
 
-\begin{DoxyVerb}<test type="dll" param="--from right_camera.ini"> CameraTest </test>
-<test type="dll" param="--from left_camera.ini"> CameraTest </test> 
+<suit name=\textcolor{stringliteral}{"Basic Tests Suite"}>
+    <description>Testing robot\textcolor{stringliteral}{'s basic features</description>}
+\textcolor{stringliteral}{    <environment>--robotname icubSim</environment>}
+\textcolor{stringliteral}{    <fixture param="--fixture icubsim-fixture.xml"> yarpmanager </fixture>}
+\textcolor{stringliteral}{}
+\textcolor{stringliteral}{    }
+\textcolor{stringliteral}{    <test type="dll" param="--from right\_camera.ini"> CameraTest </test>}
+\textcolor{stringliteral}{    <test type="dll" param="--from left\_camera.ini"> CameraTest </test> }
+\textcolor{stringliteral}{}
+\textcolor{stringliteral}{    }
+\textcolor{stringliteral}{    <test type="dll" param="--from test\_right\_arm.ini"> MotorTest </test>}
+\textcolor{stringliteral}{    <test type="dll" param="--from test\_left\_arm.ini"> MotorTest </test>}
+\textcolor{stringliteral}{</suit>}
+\end{DoxyCode}
 
-
-<test type="dll" param="--from test_right_arm.ini"> MotorTest </test>
-<test type="dll" param="--from test_left_arm.ini"> MotorTest </test>
-\end{DoxyVerb}
- $<$/suit$>$
-
-```
 
 Then you can run all the test cases from the test suite\-:
 
-``` testrunner --verbose --suit icub-\/tests/suits/basics-\/icub\-Sim.\-xml ```
+
+\begin{DoxyCode}
+testrunner --verbose --suit icub-tests/suits/basics-icubSim.xml
+\end{DoxyCode}
+
 
 The {\ttfamily testrunner}, first, launches the i\-Cub simulator and then runs all the tests one after each other. After running all the test cases, the {\ttfamily tesrunner} stop the simulator. If the i\-Cub simulator crashes during the test run, the {\ttfamily testrunner} re-\/launchs it and continues running the remaining tests.
 

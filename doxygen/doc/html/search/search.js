@@ -9,18 +9,16 @@ var indexSectionsWithContent =
 {
   0: "acefijmopsw",
   1: "cefjmops",
-  2: "i",
-  3: "a",
-  4: "iw"
+  2: "a",
+  3: "iw"
 };
 
 var indexSectionNames =
 {
   0: "all",
   1: "classes",
-  2: "namespaces",
-  3: "groups",
-  4: "pages"
+  2: "groups",
+  3: "pages"
 };
 
 function convertToId(search)

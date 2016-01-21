@@ -39,7 +39,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li class="current"><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="modules.html"><span>Modules</span></a></li>
-      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -65,7 +64,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Groups</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Groups</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -89,86 +88,144 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="textblock"><h1><a class="anchor" id="writing-new-tests"></a>
 Writing a new test</h1>
 <p>Create a folder with the name of your test case in the <code>icub-tests/src/</code> folder to keep your test codes:</p>
-<p>``` $ mkdir icub-tests/src/example-test ```</p>
-<p>Create a child test class inherited from the <code>YarpTestCase</code>:</p>
-<p>```c++ #ifndef <em>EXAMPLE_TEST_H</em> #define <em>EXAMPLE_TEST_H</em></p>
-<p>#include &lt;YarpTestCase.h&gt;</p>
-<p>class <a class="el" href="classExampleTest.html" title="This is just an example test, use it as a reference to implement new tests. ">ExampleTest</a> : public YarpTestCase { public: <a class="el" href="classExampleTest.html" title="This is just an example test, use it as a reference to implement new tests. ">ExampleTest()</a>; virtual ~ExampleTest();</p>
-<p>virtual bool setup(yarp::os::Property&amp; property);</p>
-<p>virtual void tearDown();</p>
-<p>virtual void run(); };</p>
-<p>#endif //_EXAMPLE_TEST_H ```</p>
-<p>Implement the test case:</p>
-<p>```c++ #include &lt;Plugin.h&gt; #include "ExampleTest.h"</p>
-<p>using namespace std; using namespace RTF; using namespace yarp::os;</p>
-<p>prepare the plugin PREPARE_PLUGIN(ExampleTest)</p>
-<p>ExampleTest::ExampleTest() : YarpTestCase("ExampleTest") { }</p>
-<p>ExampleTest::~ExampleTest() { }</p>
-<p>bool ExampleTest::setup(yarp::os::Property &amp;property) {</p>
-<p>initialization goes here ... updating the test name if(property.check("name")) setName(property.find("name").asString());</p>
-<p>string example = property.check("example", Value("default value")).asString();</p>
-<p>RTF_TEST_REPORT(Asserter::format("Use '%s' for the example param!", example.c_str())); return true; }</p>
-<p>void ExampleTest::tearDown() { finalization goes here ... }</p>
-<p>void ExampleTest::run() { </p>
-<pre class="fragment">int a = 5; int b = 3;
-RTF_TEST_REPORT("testing a &lt; b");
-RTF_TEST_CHECK(a&lt;b, Asserter::format("%d is not smaller than %d.", a, b));
-RTF_TEST_REPORT("testing a &gt; b");
-RTF_TEST_CHECK(a&gt;b, Asserter::format("%d is not smaller than %d.", a, b));
-RTF_TEST_REPORT("testing a == b");
-RTF_TEST_CHECK(a==b, Asserter::format("%d is not smaller than %d.", a, b));
-</pre><p> add more ... } ```</p>
-<p>Notice: The <code>RTF_TEST_CHECK</code>, <code>RTF_TEST_REPORT</code> do NOT threw any exception and are used to add failure or report messages to the result collector. Instead, all the macros which include <code>_ASSERT_</code> within their names (e.g., <code>RTF_ASSERT_FAIL</code>) throw exceptions which prevent only the current test case (Not the whole test suite) of being proceed. The error/failure messages thrown by the exceptions are caught. (See <a href="http://robotology.github.io/robot-testing/documentation/TestAssert_8h.html">*Basic Assertion macros*</a>).</p>
+<div class="fragment"><div class="line">$ mkdir icub-tests/src/example-test</div>
+</div><!-- fragment --><p>Create a child test class inherited from the <code>YarpTestCase</code>:</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#ifndef _EXAMPLE_TEST_H_</span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor">#define _EXAMPLE_TEST_H_</span></div>
+<div class="line"><span class="preprocessor"></span></div>
+<div class="line"><span class="preprocessor">#include &lt;YarpTestCase.h&gt;</span></div>
+<div class="line"></div>
+<div class="line"><span class="keyword">class </span><a class="code" href="classExampleTest.html">ExampleTest</a> : <span class="keyword">public</span> YarpTestCase {</div>
+<div class="line"><span class="keyword">public</span>:</div>
+<div class="line">    <a class="code" href="classExampleTest.html">ExampleTest</a>();</div>
+<div class="line">    <span class="keyword">virtual</span> ~<a class="code" href="classExampleTest.html">ExampleTest</a>();</div>
+<div class="line"></div>
+<div class="line">    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> setup(yarp::os::Property&amp; property);</div>
+<div class="line"></div>
+<div class="line">    <span class="keyword">virtual</span> <span class="keywordtype">void</span> tearDown();</div>
+<div class="line"></div>
+<div class="line">    <span class="keyword">virtual</span> <span class="keywordtype">void</span> run();</div>
+<div class="line">};</div>
+<div class="line"></div>
+<div class="line"><span class="preprocessor">#endif //_EXAMPLE_TEST_H</span></div>
+</div><!-- fragment --><p>Implement the test case:</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;Plugin.h&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &quot;ExampleTest.h&quot;</span></div>
+<div class="line"></div>
+<div class="line"><span class="keyword">using namespace </span>std;</div>
+<div class="line"><span class="keyword">using namespace </span>RTF;</div>
+<div class="line"><span class="keyword">using namespace </span>yarp::os;</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// prepare the plugin</span></div>
+<div class="line">PREPARE_PLUGIN(<a class="code" href="classExampleTest.html">ExampleTest</a>)</div>
+<div class="line"></div>
+<div class="line"><a class="code" href="classExampleTest.html">ExampleTest</a>::<a class="code" href="classExampleTest.html">ExampleTest</a>() : YarpTestCase(&quot;<a class="code" href="classExampleTest.html">ExampleTest</a>&quot;) {</div>
+<div class="line">}</div>
+<div class="line"></div>
+<div class="line">ExampleTest::~ExampleTest() { }</div>
+<div class="line"></div>
+<div class="line"><span class="keywordtype">bool</span> ExampleTest::setup(yarp::os::Property &amp;property) {</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">// initialization goes here ...</span></div>
+<div class="line">    <span class="comment">//updating the test name</span></div>
+<div class="line">    <span class="keywordflow">if</span>(property.check(<span class="stringliteral">&quot;name&quot;</span>))</div>
+<div class="line">        setName(property.find(<span class="stringliteral">&quot;name&quot;</span>).asString());</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordtype">string</span> example = <span class="keyword">property</span>.check(<span class="stringliteral">&quot;example&quot;</span>, Value(<span class="stringliteral">&quot;default value&quot;</span>)).asString();</div>
+<div class="line"></div>
+<div class="line">    RTF_TEST_REPORT(Asserter::format(<span class="stringliteral">&quot;Use &#39;%s&#39; for the example param!&quot;</span>,</div>
+<div class="line">                                       example.c_str()));</div>
+<div class="line">    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line">}</div>
+<div class="line"></div>
+<div class="line"><span class="keywordtype">void</span> ExampleTest::tearDown() {</div>
+<div class="line">    <span class="comment">// finalization goes here ...</span></div>
+<div class="line">}</div>
+<div class="line"></div>
+<div class="line"><span class="keywordtype">void</span> ExampleTest::run() {</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordtype">int</span> a = 5; <span class="keywordtype">int</span> b = 3;</div>
+<div class="line">    RTF_TEST_REPORT(<span class="stringliteral">&quot;testing a &lt; b&quot;</span>);</div>
+<div class="line">    RTF_TEST_CHECK(a&lt;b, Asserter::format(<span class="stringliteral">&quot;%d is not smaller than %d.&quot;</span>, a, b));</div>
+<div class="line">    RTF_TEST_REPORT(<span class="stringliteral">&quot;testing a &gt; b&quot;</span>);</div>
+<div class="line">    RTF_TEST_CHECK(a&gt;b, Asserter::format(<span class="stringliteral">&quot;%d is not smaller than %d.&quot;</span>, a, b));</div>
+<div class="line">    RTF_TEST_REPORT(<span class="stringliteral">&quot;testing a == b&quot;</span>);</div>
+<div class="line">    RTF_TEST_CHECK(a==b, Asserter::format(<span class="stringliteral">&quot;%d is not smaller than %d.&quot;</span>, a, b));</div>
+<div class="line">    <span class="comment">// add more </span></div>
+<div class="line">    <span class="comment">// ...</span></div>
+<div class="line">}</div>
+</div><!-- fragment --><p>Notice: The <code>RTF_TEST_CHECK</code>, <code>RTF_TEST_REPORT</code> do NOT threw any exception and are used to add failure or report messages to the result collector. Instead, all the macros which include <code>_ASSERT_</code> within their names (e.g., <code>RTF_ASSERT_FAIL</code>) throw exceptions which prevent only the current test case (Not the whole test suite) of being proceed. The error/failure messages thrown by the exceptions are caught. (See <a href="http://robotology.github.io/robot-testing/documentation/TestAssert_8h.html">*Basic Assertion macros*</a>).</p>
 <p>The report/assertion macros store the source line number where the check/report or assertion happen. To see them, you can run the test case or suit with <code>--detail</code> parameter using the <code>testrunner</code> (See <a href="http://robotology.github.io/robot-testing/documentation/testrunner.html">*Running test case plug-ins using testrunner*</a>).</p>
 <p>Create a cmake file to build the plug-in:</p>
-<p>```cmake cmake_minimum_required(VERSION 2.8.9)</p>
-<h1>set the project name</h1>
-<p>set(PROJECTNAME ExampleTest) project(${PROJECTNAME})</p>
-<h1>add the required cmake packages</h1>
-<p>find_package(RTF) find_package(RTF COMPONENTS DLL) find_package(YARP)</p>
-<h1>add include directories</h1>
-<p>include_directories(${CMAKE_SOURCE_DIR} ${RTF_INCLUDE_DIRS} ${YARP_INCLUDE_DIRS} ${YARP_HELPERS_INCLUDE_DIR})</p>
-<h1>add required libraries</h1>
-<p>link_libraries(${RTF_LIBRARIES} ${YARP_LIBRARIES})</p>
-<h1>add the source codes to build the plugin library</h1>
-<p>add_library(${PROJECTNAME} MODULE <a class="el" href="ExampleTest_8h_source.html">ExampleTest.h</a> <a class="el" href="ExampleTest_8cpp_source.html">ExampleTest.cpp</a>)</p>
-<h1>set the installation options</h1>
-<p>install(TARGETS ${PROJECTNAME} EXPORT ${PROJECTNAME} COMPONENT runtime LIBRARY DESTINATION lib) ```</p>
-<p>Call your cmake file from the <code>icub-test/CMakeLists.txt</code> to build it along with the other other test plugins. To do that, adds the following line to the <code>icub-test/CMakeLists.txt</code></p>
-<p>``` </p>
-<h1>Build example test</h1>
-<p>add_subdirectory(src/example-test) ```</p>
-<p>Please check the <code>icub-tests/example</code> folder for a template for developing tests for the iCub.</p>
+<div class="fragment"><div class="line">cmake_minimum_required(VERSION 2.8.9)</div>
+<div class="line"></div>
+<div class="line"><span class="preprocessor"># set the project name</span></div>
+<div class="line"><span class="preprocessor"></span>set(PROJECTNAME <a class="code" href="classExampleTest.html">ExampleTest</a>)</div>
+<div class="line">project(${PROJECTNAME})</div>
+<div class="line"></div>
+<div class="line"># add the required cmake packages</div>
+<div class="line">find_package(RTF)</div>
+<div class="line">find_package(RTF COMPONENTS DLL)</div>
+<div class="line">find_package(YARP)</div>
+<div class="line"></div>
+<div class="line"><span class="preprocessor"># add include directories</span></div>
+<div class="line"><span class="preprocessor"></span>include_directories(${CMAKE_SOURCE_DIR}</div>
+<div class="line">                    ${RTF_INCLUDE_DIRS}</div>
+<div class="line">                    ${YARP_INCLUDE_DIRS}</div>
+<div class="line">                    ${YARP_HELPERS_INCLUDE_DIR})</div>
+<div class="line"></div>
+<div class="line"># add required libraries </div>
+<div class="line">link_libraries(${RTF_LIBRARIES}</div>
+<div class="line">               ${YARP_LIBRARIES})</div>
+<div class="line"></div>
+<div class="line"># add the source codes to build the plugin library</div>
+<div class="line">add_library(${PROJECTNAME} MODULE <a class="code" href="classExampleTest.html">ExampleTest</a>.h</div>
+<div class="line">                                  <a class="code" href="classExampleTest.html">ExampleTest</a>.cpp)</div>
+<div class="line"></div>
+<div class="line"># set the installation options</div>
+<div class="line">install(TARGETS ${PROJECTNAME}</div>
+<div class="line">        EXPORT ${PROJECTNAME}</div>
+<div class="line">        COMPONENT runtime</div>
+<div class="line">        LIBRARY DESTINATION lib)</div>
+</div><!-- fragment --><p>Call your cmake file from the <code>icub-test/CMakeLists.txt</code> to build it along with the other other test plugins. To do that, adds the following line to the <code>icub-test/CMakeLists.txt</code></p>
+<div class="fragment"><div class="line"><span class="preprocessor"># Build example test </span></div>
+<div class="line"><span class="preprocessor">add_subdirectory(src/example-test)</span></div>
+</div><!-- fragment --><p>Please check the <code>icub-tests/example</code> folder for a template for developing tests for the iCub.</p>
 <h1><a class="anchor" id="running_single_test_case"></a>
 Running a single test case</h1>
 <p>As it is documented here (<a href="http://robotology.github.io/robot-testing/documentation/testrunner.html">*Running test case plug-ins using testrunner*</a>) you can run a single test case or run it with the other tests using a test suite. For example, to run a single test case:</p>
-<p>``` testrunner &ndash;verbose &ndash;test plugins/ExampleTest.so &ndash;param "--name MyExampleTest" ```</p>
-<p>Notice that this test require the <code>yarpserver</code> to be running and it contains tests that are programmed to succeed and some that are programmed to fail.</p>
+<div class="fragment"><div class="line">testrunner --verbose --test plugins/<a class="code" href="classExampleTest.html">ExampleTest</a>.so  --param <span class="stringliteral">&quot;--name MyExampleTest&quot;</span></div>
+</div><!-- fragment --><p>Notice that this test require the <code>yarpserver</code> to be running and it contains tests that are programmed to succeed and some that are programmed to fail.</p>
 <p>or to run the iCubSim camera test whith the test configuration file:</p>
-<p>``` testrunner &ndash;verbose &ndash;test plugins/CameraTest.so &ndash;param "--from camera_right.ini" &ndash;environment "--robotname icubSim" ```</p>
-<p>This runs the icubSim right-camera test with the parameters specified in the <code>right_camera.ini</code> which can be found in <code>icub-tests/suits/contexts/icubSim</code> folder. This test assumes you are running <code>yarpserver</code> and the iCub simulator (i.e. <code>iCub_SIM</code>).</p>
+<div class="fragment"><div class="line">testrunner --verbose --test plugins/<a class="code" href="classCameraTest.html">CameraTest</a>.so --param <span class="stringliteral">&quot;--from camera_right.ini&quot;</span> --environment <span class="stringliteral">&quot;--robotname icubSim&quot;</span></div>
+</div><!-- fragment --><p>This runs the icubSim right-camera test with the parameters specified in the <code>right_camera.ini</code> which can be found in <code>icub-tests/suits/contexts/icubSim</code> folder. This test assumes you are running <code>yarpserver</code> and the iCub simulator (i.e. <code>iCub_SIM</code>).</p>
 <p>Notice that the environment parameter <code>--robotname icubSim</code> is used to locate the correct context (for this examples is <code>icubSim</code>) and also to update the variables loaded from the <code>right_camera.ini</code> file.</p>
 <h1><a class="anchor" id="running_multiple_tests"></a>
 Running multiple tests using a test suite</h1>
 <p>You can update one of the existing suite XML files to add your test case plug-in and its parameters or create a new test suite which keeps all the relevant test cases. For example the <code>basic-icubSim.xml</code> test suite keeps the basic tests for cameras and motors:</p>
-<p>```xml &lt;?xml version="1.0" encoding="UTF-8"?&gt;</p>
-<p>&lt;suit name="Basic Tests Suite"&gt; Testing robot's basic features &lt;environment&gt;&ndash;robotname icubSim&lt;/environment&gt; &lt;fixture param="--fixture icubsim-fixture.xml"&gt; yarpmanager &lt;/fixture&gt;</p>
-<pre class="fragment">&lt;test type="dll" param="--from right_camera.ini"&gt; CameraTest &lt;/test&gt;
-&lt;test type="dll" param="--from left_camera.ini"&gt; CameraTest &lt;/test&gt; 
-
-
-&lt;test type="dll" param="--from test_right_arm.ini"&gt; MotorTest &lt;/test&gt;
-&lt;test type="dll" param="--from test_left_arm.ini"&gt; MotorTest &lt;/test&gt;
-</pre><p> &lt;/suit&gt;</p>
-<p>```</p>
-<p>Then you can run all the test cases from the test suite:</p>
-<p>``` testrunner &ndash;verbose &ndash;suit icub-tests/suits/basics-icubSim.xml ```</p>
-<p>The <code>testrunner</code>, first, launches the iCub simulator and then runs all the tests one after each other. After running all the test cases, the <code>tesrunner</code> stop the simulator. If the iCub simulator crashes during the test run, the <code>testrunner</code> re-launchs it and continues running the remaining tests.</p>
+<div class="fragment"><div class="line">&lt;?xml version=<span class="stringliteral">&quot;1.0&quot;</span> encoding=<span class="stringliteral">&quot;UTF-8&quot;</span>?&gt;</div>
+<div class="line"></div>
+<div class="line">&lt;suit name=<span class="stringliteral">&quot;Basic Tests Suite&quot;</span>&gt;</div>
+<div class="line">    &lt;description&gt;Testing robot<span class="stringliteral">&#39;s basic features&lt;/description&gt;</span></div>
+<div class="line"><span class="stringliteral">    &lt;environment&gt;--robotname icubSim&lt;/environment&gt;</span></div>
+<div class="line"><span class="stringliteral">    &lt;fixture param=&quot;--fixture icubsim-fixture.xml&quot;&gt; yarpmanager &lt;/fixture&gt;</span></div>
+<div class="line"><span class="stringliteral"></span></div>
+<div class="line"><span class="stringliteral">    </span></div>
+<div class="line"><span class="stringliteral">    &lt;test type=&quot;dll&quot; param=&quot;--from right_camera.ini&quot;&gt; CameraTest &lt;/test&gt;</span></div>
+<div class="line"><span class="stringliteral">    &lt;test type=&quot;dll&quot; param=&quot;--from left_camera.ini&quot;&gt; CameraTest &lt;/test&gt; </span></div>
+<div class="line"><span class="stringliteral"></span></div>
+<div class="line"><span class="stringliteral">    </span></div>
+<div class="line"><span class="stringliteral">    &lt;test type=&quot;dll&quot; param=&quot;--from test_right_arm.ini&quot;&gt; MotorTest &lt;/test&gt;</span></div>
+<div class="line"><span class="stringliteral">    &lt;test type=&quot;dll&quot; param=&quot;--from test_left_arm.ini&quot;&gt; MotorTest &lt;/test&gt;</span></div>
+<div class="line"><span class="stringliteral">&lt;/suit&gt;</span></div>
+</div><!-- fragment --><p>Then you can run all the test cases from the test suite:</p>
+<div class="fragment"><div class="line">testrunner --verbose --suit icub-tests/suits/basics-icubSim.xml</div>
+</div><!-- fragment --><p>The <code>testrunner</code>, first, launches the iCub simulator and then runs all the tests one after each other. After running all the test cases, the <code>tesrunner</code> stop the simulator. If the iCub simulator crashes during the test run, the <code>testrunner</code> re-launchs it and continues running the remaining tests.</p>
 <p>How <code>testrunner</code> knows that it should launch the iCub simulator before running the tests? Well, this is indicated by <code>&lt;fixture param="--fixture icubsim-fixture.xml"&gt; yarpmanager &lt;/fixture&gt;</code>. The <code>testrunner</code> uses the <code>yarpmanager</code> fixture plug-in to launch the modules which are listed in the <code>icubsim-fixture.xml</code>. Notice that all the fixture files should be located in the <code>icub-tests/suits/fixtures</code> folder. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 22 2015 14:16:54 for icub-test by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 21 2016 11:47:53 for icub-test by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
